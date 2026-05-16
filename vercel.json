@@ -8,6 +8,14 @@
   },
   "rewrites": [
     {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/login/",
+      "destination": "/login.html"
+    },
+    {
       "source": "/:path*",
       "destination": "/index.html"
     }
