@@ -29,6 +29,15 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
   },
+  server: {
+    host: true,
+    allowedHosts: true,
+  },
+  preview: {
+    host: true,
+    port: Number(process.env.PORT) || 4173,
+    allowedHosts: true,
+  },
   optimizeDeps: {
     include: ["@tanstack/react-query"],
     exclude: ["@tanstack/query-core"],
