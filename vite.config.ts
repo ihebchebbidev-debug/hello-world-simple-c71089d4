@@ -17,5 +17,7 @@ export default defineConfig({
     include: ["@tanstack/react-query"],
     exclude: ["@tanstack/query-core"], // Let React Query handle its peer deps
   },
+  server: { host: true, allowedHosts: true },
+  preview: { host: true, allowedHosts: true, port: Number(process.env.PORT) || 4173 },
   },
 });
