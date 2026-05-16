@@ -12,7 +12,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/lib/auth";
 import { I18nProvider } from "@/lib/i18n";
-import { LoadingScreen } from "@/components/LoadingScreen";
 
 import appCss from "../styles.css?url";
 
@@ -129,14 +128,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const location = useLocation();
-  const isLoginRoute = location.pathname === "/login";
   return (
     <QueryClientProvider client={queryClient}>
       <I18nProvider>
         <AuthProvider>
           <TooltipProvider delayDuration={200}>
-            {!isLoginRoute && <LoadingScreen />}
             <Outlet />
             <Toaster richColors closeButton position="top-right" />
           </TooltipProvider>
