@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "vercel-build": "vite build --config vite.vercel.config.ts"
+    "vercel-build": "vite build --config vite.vercel.config.ts",
+    "render-build": "vite build --config vite.vercel.config.ts",
+    "render-start": "vite preview --config vite.vercel.config.ts --host 0.0.0.0 --port ${PORT:-4173}"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
