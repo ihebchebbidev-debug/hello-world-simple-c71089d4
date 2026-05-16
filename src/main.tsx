@@ -1,22 +1,35 @@
 import ReactDOM from "react-dom/client";
-import { RouterProvider } from "@tanstack/react-router";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClient } from "@tanstack/react-query";
-import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { AuthProvider } from "@/lib/auth";
 import "./styles.css";
 
 // SPA-only client bootstrap (used by the Vercel build).
-// SSR, server functions and head() meta are NOT executed here.
+// IMPORTANT: Do NOT wrap with <QueryClientProvider> or <AuthProvider> here.
+// The root route (src/routes/__root.tsx -> RootComponent) already provides
+// QueryClientProvider, I18nProvider, AuthProvider and TooltipProvider.
+// Wrapping again here caused duplicate providers, duplicate AuthAPI.me()
+// calls on mount, and on Vercel's production build that race re-mounted
+// the login form on every keystroke — making the inputs feel "frozen".
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 10,
     },
   },
 });
+
+// Defensive: if we land directly on /login, wipe any stale tokens so the
+// inner AuthProvider doesn't fire a me() request against a dead session.
+if (typeof window !== "undefined" && window.location.pathname.startsWith("/login")) {
+  try {
+    window.localStorage.removeItem("@ecobus-admin/access");
+    window.localStorage.removeItem("@ecobus-admin/refresh");
+    window.localStorage.removeItem("@ecobus-admin/user");
+  } catch {}
+}
+
 const router = createRouter({
   routeTree,
   context: { queryClient },
@@ -31,10 +44,4 @@ declare module "@tanstack/react-router" {
 }
 
 const rootEl = document.getElementById("root")!;
-ReactDOM.createRoot(rootEl).render(
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
-  </QueryClientProvider>,
-);
+ReactDOM.createRoot(rootEl).render(<RouterProvider router={router} />);
