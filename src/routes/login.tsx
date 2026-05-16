@@ -23,23 +23,24 @@ function LoginPage() {
   const { login, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   if (!loading && isAuthenticated) return <Navigate to="/dashboard" />;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     e.stopPropagation();
+    const form = new FormData(e.currentTarget);
+    const email = String(form.get("email") || "").trim();
+    const password = String(form.get("password") || "");
     
-    if (!email.trim() || !password) {
+    if (!email || !password) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
 
     setBusy(true);
     try {
-      await login(email.trim(), password);
+      await login(email, password);
       toast.success("Connexion réussie");
       navigate({ to: "/dashboard" });
     } catch (err: any) {
@@ -128,13 +129,12 @@ function LoginPage() {
                 </Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   autoComplete="email"
                   required
                   placeholder="admin@ecole.tn"
                   className="h-11"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   disabled={busy}
                 />
               </div>
@@ -153,13 +153,12 @@ function LoginPage() {
                 </div>
                 <Input
                   id="password"
+                  name="password"
                   type="password"
                   autoComplete="current-password"
                   required
                   placeholder="••••••••"
                   className="h-11"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   disabled={busy}
                 />
               </div>
