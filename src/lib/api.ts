@@ -98,13 +98,13 @@ export async function http<T = any>(path: string, opts: HttpOpts = {}): Promise<
   }
   let res: Response;
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = globalThis.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
     res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined, signal: controller.signal });
   } catch (e) {
-    throw new Error(e instanceof DOMException && e.name === "AbortError" ? "Le serveur met trop de temps à répondre." : "Erreur réseau — vérifiez votre connexion.");
+    throw new Error((e as Error)?.name === "AbortError" ? "Le serveur met trop de temps à répondre." : "Erreur réseau — vérifiez votre connexion.");
   } finally {
-    window.clearTimeout(timeout);
+    globalThis.clearTimeout(timeout);
   }
   let json: any = null;
   try { json = await res.json(); } catch { /* ignore */ }
