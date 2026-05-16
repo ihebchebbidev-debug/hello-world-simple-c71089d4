@@ -29,6 +29,9 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: false,
   },
+  define: {
+    "import.meta.env.VITE_STATIC_SELF_HOST": JSON.stringify("true"),
+  },
   server: {
     host: true,
     allowedHosts: true,
