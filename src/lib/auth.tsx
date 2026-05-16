@@ -21,20 +21,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Only run auth check on client-side
     if (typeof window === "undefined") return;
 
+    let alive = true;
     const cached = Auth.getUser();
-    if (cached) setUser(cached);
+    const token = Auth.getToken();
+    if (cached) {
+      setUser(cached);
+      setLoading(false);
+    }
     
-    if (Auth.getToken()) {
+    if (token) {
       AuthAPI.me()
         .then((u) => {
+          if (!alive) return;
           if (u) setUser(u);
-          else { Auth.clear(); setUser(null); }
+          else if (!cached) { Auth.clear(); setUser(null); }
         })
-        .catch(() => { Auth.clear(); setUser(null); })
-        .finally(() => setLoading(false));
+        .catch(() => {
+          if (!alive || cached) return;
+          Auth.clear(); setUser(null);
+        })
+        .finally(() => { if (alive) setLoading(false); });
     } else {
       setLoading(false);
     }
+
+    return () => { alive = false; };
   }, []);
 
   // Roles can come as `role: "admin"`, `roles: ["admin"]`, or `roles: [{name:"admin"}]`.
