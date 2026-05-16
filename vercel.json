@@ -6,10 +6,11 @@
   "env": {
     "VITE_VERCEL_BUILD": "true"
   },
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/:path((?!assets/|@id/|favicon\\.ico|icon-192\\.png|icon-512\\.png|apple-touch-icon\\.png|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|.*\\..*).*)",
-      "destination": "/index.html"
+      "source": "/:path*",
+      "destination": "https://hello-world-simple-c71089d4.onrender.com/:path*",
+      "permanent": false
     }
   ]
 }
