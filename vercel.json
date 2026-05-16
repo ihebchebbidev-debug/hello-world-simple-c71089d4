@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm run vercel-build",
+  "outputDirectory": "dist",
+  "framework": null,
+  "env": {
+    "VITE_VERCEL_BUILD": "true"
+  },
+  "rewrites": [
+    {
+      "source": "/:path((?!assets/|@id/|favicon\\.ico|icon-192\\.png|icon-512\\.png|apple-touch-icon\\.png|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
