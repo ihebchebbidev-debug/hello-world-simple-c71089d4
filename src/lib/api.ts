@@ -9,6 +9,7 @@ export const BASE_URL = "https://busapi.ihebchebbi.pro/api/v1";
 const ACCESS_KEY = "@ecobus-admin/access";
 const REFRESH_KEY = "@ecobus-admin/refresh";
 const USER_KEY = "@ecobus-admin/user";
+const REQUEST_TIMEOUT_MS = 15_000;
 
 const ls = {
   get: (k: string) => (typeof window === "undefined" ? null : window.localStorage.getItem(k)),
@@ -96,10 +97,14 @@ export async function http<T = any>(path: string, opts: HttpOpts = {}): Promise<
     if (tok) headers.Authorization = `Bearer ${tok}`;
   }
   let res: Response;
+  const controller = new AbortController();
+  const timeout = globalThis.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
-    res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined, signal: controller.signal });
   } catch (e) {
-    throw new Error("Erreur réseau — vérifiez votre connexion.");
+    throw new Error((e as Error)?.name === "AbortError" ? "Le serveur met trop de temps à répondre." : "Erreur réseau — vérifiez votre connexion.");
+  } finally {
+    globalThis.clearTimeout(timeout);
   }
   let json: any = null;
   try { json = await res.json(); } catch { /* ignore */ }
@@ -146,7 +151,7 @@ export const AuthAPI = {
     const data = await http<any>("/auth/login", { method: "POST", auth: false, body: { email, password } });
     const accessToken = data?.accessToken || data?.access_token || data?.token;
     const refreshToken = data?.refreshToken || data?.refresh_token || null;
-    const user = data?.user || data?.admin || null;
+    const user = data?.user || data?.admin || { email };
     Auth.setSession(accessToken, refreshToken, user);
     return { accessToken, refreshToken, user } as { accessToken: string; refreshToken?: string; user: AdminUser };
   },

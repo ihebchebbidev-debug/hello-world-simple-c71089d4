@@ -74,7 +74,7 @@ const settingsGroup = {
 };
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const path = useRouterState({ select: (r) => r.location.pathname });
   const { user, isSuperAdmin, logout } = useAuth();
@@ -134,7 +134,7 @@ export function AppSidebar() {
                         tooltip={item.title}
                         className="group relative h-9 rounded-md font-medium text-sidebar-foreground/80 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-foreground"
                       >
-                        <Link to={item.url} className="flex items-center gap-2.5">
+                        <Link to={item.url} onClick={() => setOpenMobile(false)} className="flex items-center gap-2.5">
                           {active && (
                             <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full bg-sidebar-primary" />
                           )}

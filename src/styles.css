@@ -176,6 +176,7 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    pointer-events: auto !important;
     /* Match the mobile apps: native system stack (SF on iOS/macOS, Segoe on Windows, Roboto on Android). */
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans Arabic", sans-serif;
     font-feature-settings: "ss01", "cv11";
