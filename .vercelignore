@@ -1,0 +1,22 @@
+# Cloudflare specific files
+wrangler.jsonc
+.wrangler/
+.cloudflare/
+
+# Local development
+.env.local
+.env.*.local
+
+# Git
+.git
+.gitignore
+
+# Dependencies (will be installed during build)
+node_modules
+
+# Cache
+.turbo
+.cache
+
+# Development only
+.lovable/
