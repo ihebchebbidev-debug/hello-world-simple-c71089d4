@@ -1,4 +1,4 @@
-import tailwindcss from "@tailwindcss/vite";import tailwindcss from "@tailwindcss/vite";import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import tailwindcss from "@tailwindcss/vite";import tailwindcss from "@tailwindcss/vite";import tailwindcss from "@tailwindcss/vite";import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
@@ -6,37 +6,76 @@ import viteReact from "@vitejs/plugin-react";import { tanstackStart } from "@tan
 
 import { defineConfig as defineLovableConfig } from "@lovable.dev/vite-tanstack-config";
 
-import { nitro } from "nitro/vite";import viteReact from "@vitejs/plugin-react";export default defineConfig({
+import { nitro } from "nitro/vite";import viteReact from "@vitejs/plugin-react";import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
 import { fileURLToPath, URL } from "node:url";
 
-import { defineConfig as defineViteConfig, type ConfigEnv } from "vite";import { defineConfig as defineLovableConfig } from "@lovable.dev/vite-tanstack-config";  tanstackStart: {
+import { defineConfig as defineViteConfig, type ConfigEnv } from "vite";import { defineConfig as defineLovableConfig } from "@lovable.dev/vite-tanstack-config";
 
 import tsConfigPaths from "vite-tsconfig-paths";
 
-import { nitro } from "nitro/vite";    server: { entry: "server" },
+import { nitro } from "nitro/vite";import viteReact from "@vitejs/plugin-react";export default defineConfig({
 
 const lovableConfig = defineLovableConfig();
 
-import { fileURLToPath, URL } from "node:url";  },
+import { fileURLToPath, URL } from "node:url";
 
 export default async function config(env: ConfigEnv) {
 
-  // Check if running on Vercelimport { defineConfig as defineViteConfig, type ConfigEnv } from "vite";  vite: {
+  if (process.env.VERCEL === "1") {import { defineConfig as defineViteConfig, type ConfigEnv } from "vite";import { defineConfig as defineLovableConfig } from "@lovable.dev/vite-tanstack-config";  tanstackStart: {
 
-  if (process.env.VERCEL === "1") {
+    return defineViteConfig({
 
-    return defineViteConfig({import tsConfigPaths from "vite-tsconfig-paths";    build: {
+      server: { host: "::", port: 8080 },import tsConfigPaths from "vite-tsconfig-paths";
 
-      server: { host: "::", port: 8080 },
+      resolve: {
 
-      resolve: {      outDir: "dist",
+        alias: {import { nitro } from "nitro/vite";    server: { entry: "server" },
 
-        alias: {
+          "@": fileURLToPath(new URL("./src", import.meta.url)),
+
+        },const lovableConfig = defineLovableConfig();
+
+        dedupe: [
+
+          "react",import { fileURLToPath, URL } from "node:url";  },
+
+          "react-dom",
+
+          "react/jsx-runtime",export default async function config(env: ConfigEnv) {
+
+          "@tanstack/react-query",
+
+          "@tanstack/react-query-core",  // Check if running on Vercelimport { defineConfig as defineViteConfig, type ConfigEnv } from "vite";  vite: {
+
+        ],
+
+      },  if (process.env.VERCEL === "1") {
+
+      plugins: [
+
+        tailwindcss(),    return defineViteConfig({import tsConfigPaths from "vite-tsconfig-paths";    build: {
+
+        tsConfigPaths({ projects: ["./tsconfig.json"] }),
+
+        tanstackStart(),      server: { host: "::", port: 8080 },
+
+        nitro({ preset: "vercel" }),
+
+        viteReact(),      resolve: {      outDir: "dist",
+
+      ],
+
+    });        alias: {
+
+  }
 
           "@": fileURLToPath(new URL("./src", import.meta.url)),const lovableConfig = defineLovableConfig();      emptyOutDir: true,
 
-        },
+  return lovableConfig(env);
+
+}        },
+
 
         dedupe: [    },
 
